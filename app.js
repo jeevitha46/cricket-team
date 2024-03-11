@@ -40,7 +40,7 @@ const convertDbObjectToResponseObject = (dbObject) =>{
 
 app.get("/players/", async (request, response)=>{
     const getPlayerQuery = `
-    SELECT * FROM cricket_team
+    SELECT * FROM cricket_team;
     `;
     const playersArray = await database.all(getPlayerQuery);
     response.send(
@@ -54,7 +54,7 @@ app.get('/players/:playerId/', async (request, response)=>{
     const {playerId} = request.params;
     const getPlayerQuery = `
     SELECT * FROM cricket_team
-    WHERE player_id = `${playerId}`;
+    WHERE player_id = ${playerId};
     `;
     const player = await database.get(getPlayerQuery);
     response.send(convertDbObjectToResponseObject(player));
@@ -64,7 +64,7 @@ app.post('/players/',async (request, response) =>{
     const {playerName, jerseyNumber, role} = request.body;
     const postPlayerQuery = `
     INSERT INTO cricket_team (player_name, jersey_name, role)
-    VALUES ('${playerName}, ${jerseyNumber}, ${role}');
+    VALUES ('${playerName}', ${jerseyNumber}, '${role}');
     `;
     const player = await database.run(postPlayerQuery);
     response.send("Player Added To Team");
@@ -78,9 +78,9 @@ app.put("/players/:playerId/", async (request, response) =>{
     UPDATE cricket_team
     SET 
     player_name = '${playerName}',
-    jersey_number = '${jerseyNumber}',
+    jersey_number = ${jerseyNumber},
     role = '${role}'
-    WHERE player_id = '${playerId}'
+    WHERE player_id = ${playerId};
     `;
 
     await database.run(updatePlayerQuery);
