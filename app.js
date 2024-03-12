@@ -12,13 +12,13 @@ let database = null;
 
 const initializeDbAndServer = async () =>{
     try{
-    const database = await open({
+      database = await open({
         filename: databasePath,
         driver: sqlite3.Database,
     });
-    app.listen(3000, ()=>
-        console.log('Server Running at http://localhost:3000/');
-    );
+    app.listen(3000, ()=>{
+        console.log('Server Running at http://localhost:3000/')
+    });
     }
     catch (error){
         console.log(`DB Error: ${error.message}`);
@@ -45,7 +45,7 @@ app.get("/players/", async (request, response)=>{
     const playersArray = await database.all(getPlayerQuery);
     response.send(
         playersArray.map((eachPlayer) =>
-        convertDbObjectToResponseObject(eachPlayer);
+        convertDbObjectToResponseObject(eachPlayer)
         )
     );
 });
@@ -63,7 +63,7 @@ app.get('/players/:playerId/', async (request, response)=>{
 app.post('/players/',async (request, response) =>{
     const {playerName, jerseyNumber, role} = request.body;
     const postPlayerQuery = `
-    INSERT INTO cricket_team (player_name, jersey_name, role)
+    INSERT INTO cricket_team (player_name, jersey_number, role)
     VALUES ('${playerName}', ${jerseyNumber}, '${role}');
     `;
     const player = await database.run(postPlayerQuery);
@@ -73,7 +73,7 @@ app.post('/players/',async (request, response) =>{
 
 app.put("/players/:playerId/", async (request, response) =>{
     const {playerName, jerseyNumber, role} = request.body;
-    const playerId = request.params;
+    const {playerId} = request.params;
     const updatePlayerQuery = `
     UPDATE cricket_team
     SET 
